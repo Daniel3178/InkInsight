@@ -1,0 +1,85 @@
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(123, 120, 120, 0.7);
+    padding: 40px;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+  }
+  
+  .close-button {
+    position: absolute;
+    top: -30px;
+    right: -30px;
+    font-size: 30px;
+    cursor: pointer;
+    color: #f6f2f2;
+    transition: color 0.3s ease;
+    background-color: #697ca2;
+
+  }
+  
+  .close-button:hover {
+    background-color: #182f4c;
+    color: white;
+  }
+  
+  .rename-section,
+  .remove-section {
+    margin-top: 20px;
+  }
+  
+  .rename-section h3,
+  .remove-section h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .rename-button,
+  .delete-btn {
+    font-size: 16px;
+    cursor: pointer;
+    color: #0f0101;
+    background-color: rgba(123, 120, 120, 0.7);
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .rename-button:hover,
+  .delete-btn:hover {
+    background-color: #b2070a;
+  }
+
+  @media only screen and (max-width: 375px) {
+    .modal {
+      position: fixed;
+      top: 50%;
+      left: 26%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      max-width: 375px;
+      margin: 0 auto;
+      overflow-y: auto; 
+    }
+    
+    .modal-content {
+      padding: 20px;
+    }
+    
+    .close-button {
+      top: 10px;
+      right: 10px;
+      font-size: 20px;
+    }
+  }

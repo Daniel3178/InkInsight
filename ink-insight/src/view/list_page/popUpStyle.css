@@ -1,0 +1,119 @@
+.modal1 {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(123, 120, 120, 0.7);
+    padding: 40px;
+    z-index: 1000;
+}
+  
+.modal-content1 {
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+.close-button1 {
+    font-size: 16px;
+    cursor: pointer;
+    color: #ffffff;
+    background-color: #e50914 !important;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+  }
+  
+  
+  .close-button1 {
+    background-color: #b2070a;
+  }
+
+.create-button1 {
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.create-button:hover1 {
+    background-color: #45a049;
+}
+
+
+.list-item {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+
+.button-container {
+    padding: 12px 20px;
+    margin-top: 5px;
+    margin-left: -20px;
+    width: 40px; 
+    margin-right: 10px;
+    padding: 2px; 
+}
+
+.dropbtn1 {
+    position: relative;
+    left: 40%;
+    font-size: 14px;
+    height: 40px !important;
+}
+
+.list-nameX {
+    font-family:cursive;
+    font-size: 25px;
+    margin-top: 20px;
+    margin-left: 20px;
+    flex-grow: 1;
+}
+
+.dropbtn1::before {
+    content: "Add to List";
+    position: absolute;
+    top: -25px; 
+    left: 50%; 
+    transform: translateX(-50%);
+    background-color: rgba(114, 111, 111, 0.7);
+    color: white;
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    opacity: 0;
+    pointer-events: none; 
+    transition: opacity 0.3s ease;
+}
+
+.dropbtn1:disabled {
+    background-color: grey; 
+    cursor: not-allowed; 
+}
+
+.dropbtn1:hover::before {
+    opacity: 1;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: var(--accent-color);
+  }

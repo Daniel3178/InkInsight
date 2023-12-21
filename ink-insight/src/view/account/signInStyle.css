@@ -1,0 +1,183 @@
+/* Error message */
+.error-message {
+  color: red;
+  position: fixed;
+  top: 18%;
+  left: 50%;
+  font-size: 20px;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+/* Sign in container */
+.sign-in-container {
+  margin-top: 200px !important;
+  margin-left: 300px !important;
+  max-width: 400px;
+  height: 370px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  min-width: 350px;
+  min-height: 340px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Form */
+.sign-in-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.sign-in-container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.sign-in-container input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+}
+
+/* Password visibility toggle */
+.password-toggle {
+  position: relative;
+}
+
+.eye-icon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #777;
+}
+
+/* Submit button */
+.sign-in-container button[type="submit"],
+.log-out {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: red;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.sign-in-container button[type="submit"],
+.log-in {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+
+.sign-in-container button[type="submit"]:hover,
+.log-out:hover {
+  background-color: #0056b3;
+}
+
+/* Switch to sign-up button */
+.switch-to-signup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100vh;
+}
+
+.switch-to-signup button {
+  margin-top: 20px;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #28a745;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.switch-to-signup button:hover {
+  background-color: #218838;
+}
+
+/* Search button */
+.search-button-container {
+  position: absolute;
+  text-align: center;
+  margin-top: -1280px !important;
+  margin-left: 1090px !important;
+}
+
+.search-button-container button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #17a2b8;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.search-button-container button:hover {
+  background-color: #138496;
+}
+
+@media screen and (max-width: 768px) {
+  .error-message {
+    font-size: 16px;
+  }
+
+  .sign-in-container {
+    margin-top: 150px !important;
+    margin-left: -300px !important;
+    margin-right: 30px;
+    max-width: 300px;
+    height: 300px;
+  }
+
+  .sign-in-container h1 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+  }
+
+  .sign-in-container input {
+    margin-bottom: 10px;
+  }
+
+  .eye-icon {
+    right: 5px;
+  }
+
+  .sign-in-container button[type="submit"],
+  .log-out {
+    padding: 8px;
+  }
+
+  .switch-to-signup button {
+    padding: 8px 15px;
+    margin-top: 15px;
+  }
+
+  .search-button-container {
+    margin-top: -640px !important;
+    margin-left: 545px !important;
+  }
+
+  .search-button-container button {
+    padding: 8px 15px;
+  }
+}

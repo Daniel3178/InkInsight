@@ -1,0 +1,31 @@
+User Consultation and Feedback 1 - InkInsight App Prototype Stage
+Introduction:
+During the prototyping phase of our InkInsight App, we conducted a consultation session with a user to gather feedback 
+and insights to enhance the app's functionalities and user experience.
+
+Key Findings
+
+1. Review System
+User Feedback: The user expressed a desire to view and provide feedback for the books they explore within the app.
+Solution: To address this, we decided to implement a 1-5 stars rating system with review functionality, enabling users to set their ratings and reviews for each book. 
+Additionally, users can view the average rating of a book based on the collective ratings provided by other users.
+
+2. Intuitive Exploration
+User Feedback: The user found the app's navigation intuitive and easily understandable, allowing them to explore the app's features and understand its purpose 
+without requiring much guidance.
+Goals: We aim to maintain this intuitive design throughout the app, ensuring users can easily navigate and utilize its features effortlessly. We have decided to implement a sidebar to make exploration even more intuitive. 
+
+3. Customizable Lists
+User Feedback: The user appreciated the customizable lists feature within our app, recognizing its value and potential for the target audience.
+Our original prototype only gave users the option to add book to lists in the bookDetails page. However, the user suggested that for efficiency,
+this feature should be implemented in the search page as well under each book. 
+
+Improvements: We plan to further refine and enhance the customizable lists functionality, allowing users to create, manage, and organize lists 
+tailored to their reading preferences more effectively. We will add the add to list page feature in the search page as the user suggested.
+
+Action Plan
+Implement Rating System: Complete the implementation of the 1-5 stars rating system to allow users to rate books and view average ratings. Additionally, implement a review system in which users can also leave comments under each book.
+Streamline Navigation: Ensure a seamless and intuitive navigation experience for users to explore various functionalities effortlessly. Implement a sidebar and a settings tab to ensure this. 
+Enhance Customizable Lists: Refine the customizable lists feature, incorporating user feedback to improve its usability and utility for readers.
+
+

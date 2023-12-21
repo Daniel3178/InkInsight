@@ -1,0 +1,64 @@
+User Consultation and Feedback for InkInsight App (Formative Evaluation Stage)
+
+1-
+Problem Identified: Sidebar Design & Navigation
+User Feedback:
+Issue: The sidebar doesn't resemble a typical sidebar; the home icon is small and doesn't provide clear navigation cues.
+Solution Implemented:
+Changed the sidebar to a React sidebar icon and increased font sizes for better visibility and clear navigation.
+
+2-
+Problem Identified: Popups and Intuitive Design
+User Feedback:
+Issue: Adding lists via popups and creating lists lacks intuitiveness.
+Solution Implemented:
+Introduced hover messages on buttons and changed button colors for intuitive interaction. Added explanatory messages in input bars for creating lists to improve clarity.
+
+3-
+Problem Identified: Unclear Homepage Functionality
+User Feedback:
+Issue: Users found it challenging to understand the purpose of the homepage and what to search for.
+Solution Implemented:
+Added text in the search input bar to prompt users to search for books and included a  message on the top of the page to highlight the app's functionalities.
+
+4-
+Problem Identified: Unappealing List Page
+User Feedback:
+Issue: The list page lacked visual appeal with just list names.
+Solution Implemented:
+Added book covers to all list pages and incorporated a scroll bar for easier navigation through the book collection within the lists.
+
+5-
+Problem Identified: Confusing Rating and Review System
+User Feedback:
+Issue: Users found the rating and review system confusing; they couldn’t tell if a rating and review were both needed or if they could just submit one. They also expressed concerns about not being able to delete ratings.
+Solution Implemented:
+Clearly linked ratings and reviews, both in implementation and user interface and labeled buttons to indicate their linkage. Users now can clearly tell that a rating and a review are both needed to add a review. Added delete functionality to ratings.
+
+6-
+Problem Identified: Overwhelming Search Results Page
+User Feedback:
+Issue: The search results page contained excessive information and a color theme that strained the eyes.
+Solution Implemented:
+Removed summaries from the search results page and revamped the color scheme. Changed to a spring-themed palette with greens, silvers, and whites for a more appealing and eye-friendly display.
+
+7- 
+Problem Identified: Lack of Mobile Responsiveness
+User Feedback:
+Issue: Users encountered formatting issues on mobile devices.
+Solution Implemented:
+Made all CSS responsive through media queries to ensure mobile-friendly usability.
+
+8-
+Problem Identified: Inefficient List Creation
+User Feedback:
+Issue: Users could only create new lists on the lists page, causing inefficiency.
+Solution Implemented:
+Added a 'create list' option in the add-to-list popups on the search results and book details pages for quicker list creation.
+
+9-
+Problem Identified: Limited Book Information on Customizable Lists
+User Feedback:
+Issue: Users wanted more information (only book covers were visible) on the customizable lists.
+Solution Implemented:
+Implemented a hover effect to display book titles and authors when users hover over the book covers on the customizable lists. This way more information is provided while keeping the page clean and not overwhelming. 
