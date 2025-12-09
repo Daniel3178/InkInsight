@@ -1,17 +1,21 @@
-import { BASE_URL, HEADER } from "../config/apiConfig";
+import { BASE_URL, options } from "../config/apiConfig";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { setCurrentAvgRatingsReq } from "./ratingSlice";
+
+// 3/discover/movie
 
 export const searchByNewApiAsync = createAsyncThunk(
   "newApi/searchByNewApi",
   async (name, { dispatch }) => {
-    const url = `${BASE_URL}api/search?title=${encodeURIComponent(name)}`;
+    const url = `${BASE_URL}/discover/movie?include_adult
+=true`;
     try {
-      const response = await fetch(url, HEADER);
+      const response = await fetch(url, options);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const json = await response.json();
+      console.log("Fetched data:", json);
       const bookIds = json.results.map((result) => result.work_id);
       dispatch(setCurrentAvgRatingsReq(bookIds));
       return json;
@@ -29,9 +33,9 @@ const responseByNewApi = createSlice({
     books: null,
   },
   reducers: {
-    setBooks(state, action){
+    setBooks(state, action) {
       state.books = action.payload;
-    }
+    },
   },
   extraReducers(builder) {
     builder
@@ -52,5 +56,5 @@ const responseByNewApi = createSlice({
 });
 export const getStatusOfApi = (state) => state.newApi.status;
 export const getNewBooks = (state) => state.newApi.books;
-export const {setBooks} = responseByNewApi.actions;
+export const { setBooks } = responseByNewApi.actions;
 export default responseByNewApi.reducer;

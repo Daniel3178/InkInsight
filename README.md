@@ -4,9 +4,8 @@
 ### 1. install node.js
 ### 2. npm install
 ### 3. npm start
-### 4. create a config folder and add apiConfig.js and firebaseConfig.js (we were told not to submit our config files)
+### 4. create a config folder and add apiConfig.js and firebaseConfig.js
 
-##### we are using this api: https://rapidapi.com/dfskGT/api/book-finder1/
 # InkInsight: Book Lover's App
 
 ## Short Description

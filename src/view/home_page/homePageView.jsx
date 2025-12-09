@@ -1,14 +1,13 @@
+import React from "react";
 import "./homePageStyle.css";
 import { MdAddCircleOutline } from "react-icons/md";
 const HomePageView = (props) => {
-
-
   const renderBooks = (book) => {
     const bookClickACB = () => {
       props.getBookDetails(book.work_id);
-      props.goToBookDetailsPage()
+      props.goToBookDetailsPage();
       window.location.reload();
-    }
+    };
 
     const addButtonClickACB = () => {
       const myBook = {
@@ -23,7 +22,7 @@ const HomePageView = (props) => {
       };
       props.setBookToAdd(myBook);
       props.openPopup();
-    }
+    };
 
     const index = props.booksAvgArray.find(
       (eachBook) => eachBook.bookId === book.work_id
@@ -55,21 +54,23 @@ const HomePageView = (props) => {
                 <h3>By: {book.authors}</h3>
               </div>
               <div>
-                <h4 className="rating">Rating: {index !== undefined ? index.avgRate?.toFixed(2) : 0} / 5</h4>
+                <h4 className="rating">
+                  Rating: {index !== undefined ? index.avgRate?.toFixed(2) : 0}{" "}
+                  / 5
+                </h4>
               </div>
             </div>
           </div>
         </div>
       </div>
     );
-  }
+  };
 
   return (
     <div className="homepage">
       <div className="header">
         <h1 className="searchForBook">Search For a Book!</h1>
-        <div className="header-buttons">
-        </div>
+        <div className="header-buttons"></div>
       </div>
       <div className="search">
         <div className="search-container">
@@ -82,7 +83,11 @@ const HomePageView = (props) => {
               props.setSearchInput(e.target.value);
             }}
           />
-          <button className="buttonOfSearch" type="button" onClick={() => props.search(props.searchInput)}>
+          <button
+            className="buttonOfSearch"
+            type="button"
+            onClick={() => props.search(props.searchInput)}
+          >
             Search
           </button>
         </div>
@@ -94,20 +99,20 @@ const HomePageView = (props) => {
               alt="loading"
             />
           ) : (
-            <><div class="fancy-text">
-              <p class="ink-insight">InkInsight:</p>
-              <p class="book-journey">Empowering Your Storytelling Journey</p>
-            </div>
+            <>
+              <div class="fancy-text">
+                <p class="ink-insight">InkInsight:</p>
+                <p class="book-journey">Empowering Your Storytelling Journey</p>
+              </div>
               <div className="searchResultsContainer">
                 {Array.isArray(props.books) && props.books.map(renderBooks)}
               </div>
-
             </>
           )}
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default HomePageView;
