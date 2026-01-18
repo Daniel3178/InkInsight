@@ -16,7 +16,6 @@ import ListPageView from "../view/list_page/listPageView";
 
 import CreateListPopUpView from "../view/list_page/createListView";
 import EditListView from "../view/list_page/EditView";
-import "../view/list_page/createListStyle.css";
 
 const ListPagePresenter = () => {
   const navigate = useNavigate();
