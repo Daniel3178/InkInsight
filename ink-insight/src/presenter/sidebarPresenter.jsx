@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { getUsername } from "../store/userAccountSlice";
 import { useSelector } from "react-redux";
-import{ALL_PAGES,SETTING_PAGES} from"../utilities/utilities";
+import { ALL_PAGES, SETTING_PAGES } from "../utilities/utilities";
 import { SidebarView } from "../view/sideBarView";
+import { signOut } from "firebase/auth";
+import { auth } from "../config/firebaseConfig";
 
 const SidebarPresenter = () => {
   const username = useSelector(getUsername);
@@ -28,9 +30,23 @@ const SidebarPresenter = () => {
     setSidebarOpen(open);
   };
 
+  const handleSignOutACB = () => {
+    if (isLoggedIn === true) {
+      signOut(auth)
+        .then(() => {
+          alert(`You've successfully signed out!`);
+          navigate("/");
+        })
+        .catch((err) => {});
+    } else {
+      alert("You are already signed out!");
+    }
+  };
+
   return (
     <SidebarView
       sidebarOpen={sidebarOpen}
+      username={username}
       anchorElUser={anchorElUser}
       handleSettingsOpenClick={handleSettingsOpenClick}
       handleSettingsCloseClick={handleSettingsCloseClick}
@@ -38,6 +54,7 @@ const SidebarPresenter = () => {
       settingsPages={SETTING_PAGES}
       allPages={ALL_PAGES}
       isLoggedIn={isLoggedIn}
+      handleLogout={handleSignOutACB}
     />
   );
 };

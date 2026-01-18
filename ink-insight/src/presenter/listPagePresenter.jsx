@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getIsLoggedIn } from "../store/userAccountSlice";
@@ -36,7 +36,7 @@ const ListPagePresenter = () => {
   };
   const handleGoToHomePage = () => {
     navigate("/", { state: "/listPage" });
-  }
+  };
 
   const handleGoToOneListPage = () => {
     navigate("/oneListPage", { state: "/listPage" });

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { verifyCredentialsCriteria } from "../utilities/regex";
@@ -41,7 +41,9 @@ function SignUp() {
         .unwrap()
         .then(() => navigate("/"))
         .catch((error) => {
-          if (error.message === "Firebase: Error (auth/email-already-in-use).") {
+          if (
+            error.message === "Firebase: Error (auth/email-already-in-use)."
+          ) {
             alert("Email already in use! Try another one!");
           }
           // console.log(error)

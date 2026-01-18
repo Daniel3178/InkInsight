@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import HomePageView from "../view/home_page/homePageView";
 import { getValue, setSearchValue1 } from "../store/searchSlice";
 import { selectBookById } from "../store/bookDetailsSlice";
 import PopupView from "../view/list_page/PopupView";
 import { useNavigate } from "react-router-dom";
-
 
 import {
   searchByNewApiAsync,
@@ -35,18 +34,20 @@ const HomePagePresenter = () => {
   const apiStatus = useSelector(getStatusOfApi);
   const listStatus = useSelector(getListStatus);
   const allListsInStore = useSelector(getLists);
-  const [bookToAdd, setBookToAdd] = useState({});
 
+  const [bookToAdd, setBookToAdd] = useState({});
   const [listToCreateName, SetListToCreateName] = useState("");
   const [isCreateListOpen, setIsCreateListOpen] = useState(false);
+  const [searchType, setSearchType] = useState("general");
 
   const setSearchInput = (name) => {
     dispatch(setSearchValue1(name));
-  }
+  };
 
   const clearBuffer = () => {
     SetListToCreateName("");
-  }
+  };
+
   const openCreateListModal = () => {
     setIsCreateListOpen(true);
   };
@@ -56,41 +57,45 @@ const HomePagePresenter = () => {
   };
 
   const handleBookClickACB = (detailID) => {
-    dispatch(selectBookById({ bookId: detailID, books: books }));
+    const cleanID = detailID.replace("/works/", "");
+    dispatch(selectBookById({ bookId: cleanID, books: books }));
   };
 
-  const handleSearchClickACB = (searchParam) => {
-    dispatch(searchByNewApiAsync(searchParam));
+  const handleSearchClickACB = () => {
+    if (searchInput) {
+      dispatch(searchByNewApiAsync({ query: searchInput, type: searchType }));
+    }
   };
 
   const handleCreateNewListACB = (listName) => {
     dispatch(createNewList(listName));
     clearBuffer();
-  }
+  };
 
   const handleAddBookClickACB = (bookToAddObject) => {
     dispatch(addBookToList(bookToAddObject));
-  }
+  };
 
   const handleGoToBookDetailsPage = () => {
     navigate("/bookDetails", { state: "/" });
-  }
+  };
 
   return (
     <div>
-
       <HomePageView
         search={handleSearchClickACB}
         getBookDetails={handleBookClickACB}
         openPopup={openCreateListModal}
         goToBookDetailsPage={handleGoToBookDetailsPage}
-        books={books?.results}
+        books={books}
         setBookToAdd={setBookToAdd}
         apiStatus={apiStatus}
         booksPromiseStatus={avgArrayStatus}
         booksAvgArray={avgRatingsResponse}
         setSearchInput={setSearchInput}
         searchInput={searchInput}
+        searchType={searchType}
+        setSearchType={setSearchType}
       />
       {isCreateListOpen && (
         <PopupView
@@ -107,6 +112,6 @@ const HomePagePresenter = () => {
       )}
     </div>
   );
-}
+};
 
 export { HomePagePresenter };
