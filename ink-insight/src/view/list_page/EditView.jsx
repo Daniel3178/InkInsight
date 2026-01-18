@@ -1,3 +1,5 @@
+import { MdClose, MdDeleteOutline } from "react-icons/md";
+import { renameListCreteria } from "../../utilities/regex";
 export const EditListView = (props) => {
   const setRenameACB = (event) => props.setRename(event.target.value);
 
