@@ -1,60 +1,108 @@
 # InkInsight
 
-# SETUP:
-### 1. install node.js
-### 2. npm install
-### 3. npm start
-### 4. create a config folder and add apiConfig.js and firebaseConfig.js
+InkInsight is a lightweight single-page application that helps book lovers discover books, manage custom reading lists, and share ratings. The project is built with modern front-end tooling and uses Firebase for authentication and persistence.
 
-# InkInsight: Book Lover's App
+Check out the app here: https://inkinsight-62df5.web.app
 
-## Short Description
-InkInsight is designed to facilitate the reading journey for book enthusiasts by providing a user-friendly interface. The app enables users to explore a diverse library, discover comprehensive book metadata, and customize reading lists while expressing their opinions through a user-friendly rating system.
+**Screenshots**
 
-## Key Features
-### User Authentication
-- Create personalized accounts
-- Effortless login and logout functionalities
+_Screenshots will be added here later._
 
-### Book Discovery
-- Explore a vast library by searching for books of interest
-- Access comprehensive book metadata through API integration:
-  - Title
-  - Picture
-  - Summary
-  - Author
-  - Community Ratings and reviews
-  - Genre
-  - isbn
-  - page-count
+**Table of contents**
 
-### Customizable Lists
-- Tailor reading experiences with customizable category lists
-- Create lists such as Favorites, Wish List, Genres, etc., to organize reading journeys effectively
-- make lists, rename lists, add book to lists, delete lists, and delete books from lists.
+- [About](#about)
+- [Features](#features)
+- [Tech stack](#tech-stack)
+- [Project structure](#project-structure)
+- [Getting started](#getting-started)
+- [Firebase configuration](#firebase-configuration)
+- [Available scripts](#available-scripts)
+- [Contributing](#contributing)
+- [License](#license)
 
-### Rating System
-- Express thoughts on books using a 1-5 star rating system, and add review.
+## About
 
-### Intuitive User Interface
-- Navigate effortlessly between features for a seamless user experience
+InkInsight provides an intuitive UI for searching books, viewing detailed metadata, creating and editing personalized lists, and rating books. It aims to be a minimal, usable companion for readers who want to organize and reflect on their reading.
 
+## Features
 
-## Project File Structure
-- **cloud_database folder**: Contains firebase.jsx handling user-specific persistence and authentication.
-- **presenter folder**: Includes different presenters for various pages.
-- **view folder**: Holds the views for each presenter and styling sheets.
-- **store folder**: Houses models and mini-models (slices) using Redux.
-- **app.jsx**: Manages routing.
-- **index.js**: Creates the root of the application.
+- **Authentication:** Sign up, sign in, and sign out with Firebase Authentication.
+- **Book discovery:** Search and view book metadata (title, author, cover image, description, page count, ISBN, ratings) via a third-party API integration.
+- **Custom lists:** Create, rename, and delete lists; add and remove books from lists.
+- **Ratings & reviews:** Rate books with a 1–5 star system and persist ratings.
+- **Offline-friendly:** Local persistence helpers use `localStorage` to keep basic state between sessions.
 
-## Pages
-- Homepage / Search Page
-- Book Details Page
-- Login/Logout/Sign Up Page
-- Lists Pages:
-  - List overview (remove lists)
-  - Create a new list
-  - Add books to a list (sidebar dropdown menu)
-  - View books on a specific list
+## Tech stack
 
+- **Frontend:** React (JSX) with functional components and hooks.
+- **Bundler / Dev server:** Vite for fast development and optimized builds.
+- **State management:** Redux Toolkit (`store` + slices) for global state.
+- **Backend / Persistence:** Firebase (Authentication + Firestore) for user accounts and data storage.
+- **APIs:** A remote books API (configured via `src/config/apiConfig.js`) for book metadata.
+- **Utilities:** Small helpers in `src/utilities` for validation and common operations.
+- **Styling:** TailwindCSS inline styling in views found in `src/view`.
+
+## Project structure (selected files)
+
+- `index.html` — app entry HTML
+- `src/index.jsx` — React entry point
+- `src/app.jsx` — top-level router and providers
+- `src/config/apiConfig.js` — external API configuration
+- `src/config/firebaseConfig.js` — Firebase setup (fill with your keys)
+- `src/database/firebase.js` — Firebase helpers used across the app
+- `src/store/` — Redux Toolkit slices and store configuration
+- `src/presenter/` — presenter modules containing business logic
+- `src/view/` — presentational React components and styles
+
+## Getting started
+
+Prerequisites
+
+- Node.js (v16+ recommended)
+- npm (or Yarn)
+
+Install and run locally
+
+```bash
+npm install
+npm run dev
+```
+
+This starts the Vite dev server (default `http://localhost:5173`).
+
+Build for production
+
+```bash
+npm run build
+npm run preview
+```
+
+## Firebase configuration
+
+1. Create a Firebase project and enable Authentication and Firestore.
+2. Copy your Firebase config values into `src/config/firebaseConfig.js` following the existing file shape.
+3. Ensure any API keys or secrets are handled appropriately for production (use environment variables for CI/deploy).
+
+If you prefer, create a `.env` file and reference values from your config files rather than committing secrets.
+
+## Available scripts
+
+- `npm run dev` — run the development server
+- `npm run build` — build the production bundle
+- `npm run preview` — locally preview the production build
+
+## Contributing
+
+Contributions are welcome. If you plan to contribute:
+
+1. Open an issue to discuss changes or features.
+2. Create a branch for your work.
+3. Submit a pull request with a clear description of changes.
+
+## License
+
+This project includes a top-level `LICENSE` file. Refer to it for license details.
+
+## Contact
+
+For questions or to share feedback, open an issue or contact the repository owner.
