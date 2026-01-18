@@ -3,7 +3,7 @@ export const ALL_PAGES = [
   { name: "Search Page", path: "/" },
   { name: "Lists Page", path: "/listPage" },
   { name: "About Us", path: "/aboutUs" },
-  { name: "Login", path: "/signIn" },
+  // { name: "Login", path: "/signIn" },
 ];
 
 export function whichPath(props) {
