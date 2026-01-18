@@ -4,22 +4,47 @@ import { setCurrentAvgRatingsReq } from "./ratingSlice";
 
 export const searchByNewApiAsync = createAsyncThunk(
   "newApi/searchByNewApi",
-  async (name, { dispatch }) => {
-    const url = `${BASE_URL}api/search?title=${encodeURIComponent(name)}`;
+  async ({ query, type = "general", page = 1 }, { dispatch }) => {
+    let queryParam = "";
+    const sanitizedQuery = encodeURIComponent(query);
+
+    switch (type) {
+      case "title":
+        queryParam = `title=${sanitizedQuery}`;
+        break;
+      case "author":
+        queryParam = `author=${sanitizedQuery}`;
+        break;
+      case "general":
+      default:
+        queryParam = `q=${sanitizedQuery}`;
+        break;
+    }
+
+    const fields =
+      "key,title,author_name,cover_i,first_publish_year,edition_count";
+    const url = `${BASE_URL}search.json?${queryParam}&page=${page}&fields=${fields}`;
+
     try {
       const response = await fetch(url, HEADER);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
+
       const json = await response.json();
-      const bookIds = json.results.map((result) => result.work_id);
+      const bookResults = json.docs;
+      const bookIds = bookResults.map((result) =>
+        result.key.replace("/works/", ""),
+      );
+
       dispatch(setCurrentAvgRatingsReq(bookIds));
-      return json;
+
+      return bookResults;
     } catch (error) {
       console.error("Error fetching data:", error);
       throw new Error("Failed to fetch data from the API");
     }
-  }
+  },
 );
 
 const responseByNewApi = createSlice({
@@ -27,22 +52,26 @@ const responseByNewApi = createSlice({
   initialState: {
     status: null,
     books: null,
+    error: null,
   },
   reducers: {
-    setBooks(state, action){
+    setBooks(state, action) {
       state.books = action.payload;
-    }
+    },
+    clearBooks(state) {
+      state.books = null;
+      state.status = null;
+    },
   },
   extraReducers(builder) {
     builder
-      .addCase(searchByNewApiAsync.pending, (state, action) => {
+      .addCase(searchByNewApiAsync.pending, (state) => {
         state.status = "loading";
+        state.error = null;
       })
       .addCase(searchByNewApiAsync.fulfilled, (state, action) => {
         state.status = "succeeded";
-        if (action.payload) {
-          state.books = action.payload;
-        }
+        state.books = action.payload;
       })
       .addCase(searchByNewApiAsync.rejected, (state, action) => {
         state.status = "rejected";
@@ -50,7 +79,8 @@ const responseByNewApi = createSlice({
       });
   },
 });
+
 export const getStatusOfApi = (state) => state.newApi.status;
 export const getNewBooks = (state) => state.newApi.books;
-export const {setBooks} = responseByNewApi.actions;
+export const { setBooks, clearBooks } = responseByNewApi.actions;
 export default responseByNewApi.reducer;
