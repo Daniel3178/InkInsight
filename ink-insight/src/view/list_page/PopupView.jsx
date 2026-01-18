@@ -1,84 +1,83 @@
-import "./popUpStyle.css";
-import { createListCreteria } from "../../utilities/regex"
+import { MdClose, MdAdd, MdCheck } from "react-icons/md";
 
 const PopupView = (props) => {
-  const setListNameACB = (event) => {
-    props.SetListToCreateName(event.target.value);
-  }
-
-  const renderListNames = (list) => {
-
-
-    const addBookBotton = () => {
-      let indexOfCurrentList = props.allLists.findIndex((object) => object.name === list.name);
-      const isBookExist = props.allLists[indexOfCurrentList].listBooks?.some(bookobj => bookobj.book.bookId === props.bookToAdd.bookId);
-      if (!isBookExist) {
-        return (
-          <button className="dropbtn1" onClick={addToList}>+</button>
-        )
-      }
-      if (isBookExist) {
-        return (
-          <button className="dropbtn1" disabled>+</button>
-        )
-      }
-    }
-
-    const addToList = () => {
-      let addBookObject = {
-        listName: list.name,
-        book: props.bookToAdd,
-      };
-      props.addBookToList(addBookObject);
-      props.closePopUp();
-    }
-
-
-    return (
-      <div key={list.id} className="list-item">
-        <div className="button-container">
-          {addBookBotton()}
-        </div>
-        <div className="list-nameX">{list.name}</div>
-      </div>
-    );
-  }
-
-
   const createListACB = () => {
-    let myObj = {
+    let newObj = createListCreteria({
       listName: props.ListName,
-      allLists: props.allLists
-    }
-    let newObj = createListCreteria(myObj);
-    if (newObj.isNameValid) {
-      props.createNewList(newObj.listName);
-    }
-    props.SetListToCreateName('');
+      allLists: props.allLists,
+    });
+    if (newObj.isNameValid) props.createNewList(newObj.listName);
+    props.SetListToCreateName("");
   };
 
-
-
-  const CloseACB = () => {
-    props.closePopUp();
-  }
-
   return (
-    <div className="modal1">
-      <div className="modal-content1">
-        <div className="list-names">
-          {props?.allLists?.map(renderListNames)}
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-canvas/80 backdrop-blur-sm animate-fade-in">
+      <div className="relative w-full max-w-sm bg-surface border border-surface-highlight rounded-2xl shadow-2xl flex flex-col max-h-[80vh]">
+        <div className="p-4 border-b border-surface-highlight flex justify-between items-center">
+          <h3 className="font-bold text-text-main">Add to List...</h3>
+          <button onClick={props.closePopUp}>
+            <MdClose size={24} className="text-text-muted hover:text-white" />
+          </button>
         </div>
-        <input value={props.valueOfInput} onChange={setListNameACB} placeholder="Enter new list name" />
-        <button className="create-button1" onClick={createListACB}>
-          create new list
-        </button>
-        <button className="close-button1" onClick={CloseACB}>
-          close
-        </button>
+
+        <div className="flex-1 overflow-y-auto p-2 space-y-1">
+          {props.allLists?.map((list) => {
+            const isBookExist = list.listBooks?.some(
+              (obj) => obj.book.bookId === props.bookToAdd.bookId,
+            );
+
+            return (
+              <div
+                key={list.name}
+                className="flex items-center justify-between p-3 rounded-lg hover:bg-surface-highlight group transition-colors"
+              >
+                <span className="text-text-secondary font-medium truncate pr-4">
+                  {list.name}
+                </span>
+                {isBookExist ? (
+                  <span className="text-brand-primary flex items-center gap-1 text-xs font-bold px-2 py-1 bg-brand-primary/10 rounded">
+                    <MdCheck /> Added
+                  </span>
+                ) : (
+                  <button
+                    onClick={() => {
+                      props.addBookToList({
+                        listName: list.name,
+                        book: props.bookToAdd,
+                      });
+                      props.closePopUp();
+                    }}
+                    className="p-2 bg-surface-highlight group-hover:bg-brand-primary text-white rounded-full transition-colors"
+                  >
+                    <MdAdd size={18} />
+                  </button>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="p-4 border-t border-surface-highlight bg-canvas/50 rounded-b-2xl">
+          <div className="text-xs font-bold text-text-muted uppercase mb-2">
+            Create New List
+          </div>
+          <div className="flex gap-2">
+            <input
+              className="flex-1 p-2 text-sm bg-surface border border-surface-highlight rounded-lg text-text-main focus:ring-1 focus:ring-brand-primary outline-none"
+              value={props.valueOfInput}
+              onChange={(e) => props.SetListToCreateName(e.target.value)}
+              placeholder="New list name..."
+            />
+            <button
+              onClick={createListACB}
+              className="bg-brand-primary hover:bg-brand-hover text-white px-3 rounded-lg text-sm font-bold"
+            >
+              Create
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
-}
-
+};
 export default PopupView;
