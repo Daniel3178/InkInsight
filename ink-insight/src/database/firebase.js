@@ -58,11 +58,11 @@ function FirebaseConnection() {
       const state = listenApi.getState();
       const referenceToBookIdUser = ref(
         database,
-        `${PATH}/ratings/${bookId}/${state.currentUserAccount.userId}`
+        `${PATH}/ratings/${bookId}/${state.currentUserAccount.userId}`,
       );
       const referenceToBookRatingInfo = ref(
         database,
-        `${PATH}/ratings/${bookId}/total`
+        `${PATH}/ratings/${bookId}/total`,
       );
 
       try {
@@ -80,7 +80,7 @@ function FirebaseConnection() {
                     ? bookRatingTotalInfo.numberOfReviews
                     : null,
                   userRate: bookRatingUserfor ? bookRatingUserfor.rate : null,
-                })
+                }),
               );
             });
           });
@@ -93,7 +93,7 @@ function FirebaseConnection() {
                 totalNumberOfRates: bookRatingTotalInfo
                   ? bookRatingTotalInfo.numberOfReviews
                   : null,
-              })
+              }),
             );
           });
         }
@@ -110,13 +110,13 @@ function FirebaseConnection() {
       const bookId = action.payload;
       const referenceToBookRatings = ref(
         database,
-        `${PATH}/ratings/${bookId}/`
+        `${PATH}/ratings/${bookId}/`,
       );
 
       try {
-        const some = await get(referenceToBookRatings);
+        const snapshot = await get(referenceToBookRatings);
 
-        if (some) {
+        if (snapshot.exists()) {
           onValue(referenceToBookRatings, (snapshot) => {
             const reviewsArray = [];
             snapshot.forEach((userSnapshot) => {
@@ -128,27 +128,26 @@ function FirebaseConnection() {
                   name,
                   review,
                   rate,
-                  time
+                  time,
                 });
               }
             });
             listenApi.dispatch(
               setCurrentBookReviewResponse({
                 reviews: reviewsArray,
-              })
+              }),
             );
           });
         } else {
-          onValue(referenceToBookRatings, (snapshot) => {
-            listenApi.dispatch(
-              setCurrentBookReviewResponse({
-                reviews: [],
-              })
-            );
-          });
+          // No ratings exist yet
+          listenApi.dispatch(
+            setCurrentBookReviewResponse({
+              reviews: [],
+            }),
+          );
         }
       } catch (error) {
-        console.error("Error fetching book rating:", error);
+        console.error("Error fetching book reviews:", error);
         dispatch(setResolvepromise("ready"));
       }
     },
@@ -158,38 +157,30 @@ function FirebaseConnection() {
     actionCreator: setCurrentAvgRatingsReq,
     effect: async (action, listenApi) => {
       dispatch(setPromiseResolveAvgRatings("loading"));
-      const bookIds = action.payload;
-      const referenceToAllRatings = ref(database, `${PATH}/ratings/`);
+      const bookIds = action.payload; // Expecting array of "OL..." IDs
+
       try {
-        const ratingsSnapshot = await get(referenceToAllRatings);
-
-        if (ratingsSnapshot.exists()) {
-          const resultArray = [];
-          const ratingsArray = [];
-          ratingsSnapshot.forEach((ratingSnapshot) => {
-            for (let i = 0; i < bookIds.length; i++) {
-              if (bookIds[i] == ratingSnapshot.key) {
-                ratingsArray.push(bookIds[i]);
-              }
-            }
-          });
-
-          for (let i = 0; i < ratingsArray.length; i++) {
-            const avgRatingPath = `${PATH}/ratings/${ratingsArray[i]}/total`;
-            const avgRatingRef = ref(database, avgRatingPath);
-            const avgRateSnapshot = await get(avgRatingRef);
-            const avgRate = avgRateSnapshot.val();
-            resultArray.push({
-              avgRate: avgRate.rating,
-              numberOfReviews: avgRate.numberOfReviews,
-              bookId: ratingsArray[i],
-            });
+        const promises = bookIds.map(async (bookId) => {
+          const ratingRef = ref(database, `${PATH}/ratings/${bookId}/total`);
+          const snapshot = await get(ratingRef);
+          if (snapshot.exists()) {
+            const val = snapshot.val();
+            return {
+              bookId: bookId,
+              avgRate: val.rating,
+              numberOfReviews: val.numberOfReviews,
+            };
           }
-          dispatch(setCurrentAvgRatingsResponse(resultArray));
-        }
+          return null; // Return null if no rating exists
+        });
+
+        const results = await Promise.all(promises);
+        const validResults = results.filter((item) => item !== null);
+
+        dispatch(setCurrentAvgRatingsResponse(validResults));
       } catch (error) {
         console.error("Error fetching array avg ratings:", error);
-        dispatch(setResolvepromise("ready"));
+        dispatch(setPromiseResolveAvgRatings("ready")); // Or "error"
       }
     },
   });
@@ -201,22 +192,20 @@ function FirebaseConnection() {
       const state = listenApi.getState();
       const referenceToBookId = ref(
         database,
-        `${PATH}/ratings/${bookIdToRate}/${state.currentUserAccount.userId}`
+        `${PATH}/ratings/${bookIdToRate}/${state.currentUserAccount.userId}`,
       );
       const referenceToTotalRate = ref(
         database,
-        `${PATH}/ratings/${bookIdToRate}/total`
+        `${PATH}/ratings/${bookIdToRate}/total`,
       );
+
       const isNotNewRating = (await get(referenceToBookId)).exists();
 
       if (isNotNewRating) {
         const userPrevRate = await get(referenceToBookId)
-          .then((snapshot) => {
-            return snapshot.val();
-          })
-          .then((userRatingDetails) => {
-            return userRatingDetails.rate;
-          });
+          .then((snapshot) => snapshot.val())
+          .then((userRatingDetails) => userRatingDetails.rate);
+
         set(referenceToBookId, {
           name: state.currentUserAccount.username,
           rate: userRate,
@@ -225,21 +214,18 @@ function FirebaseConnection() {
         });
 
         await get(referenceToTotalRate)
-          .then((snapshot) => {
-            return snapshot.val();
-          })
+          .then((snapshot) => snapshot.val())
           .then((ratingObj) => {
-            if (ratingObj.numberOfReviews > 1) {
-              const x =
-                ratingObj.rating -
-                (userPrevRate - ratingObj.rating) /
-                (ratingObj.numberOfReviews - 1);
-              const y =
-                (x * (ratingObj.numberOfReviews - 1) + userRate) /
-                ratingObj.numberOfReviews;
+            if (ratingObj && ratingObj.numberOfReviews > 1) {
+              // Mathematical adjustment for removing old rate and adding new one
+              const currentTotalScore =
+                ratingObj.rating * ratingObj.numberOfReviews;
+              const newTotalScore = currentTotalScore - userPrevRate + userRate;
+              const newAverage = newTotalScore / ratingObj.numberOfReviews;
+
               set(referenceToTotalRate, {
                 numberOfReviews: ratingObj.numberOfReviews,
-                rating: y,
+                rating: newAverage,
               });
             } else {
               set(referenceToTotalRate, {
@@ -255,10 +241,9 @@ function FirebaseConnection() {
           review: userReview,
           time: timeStamp,
         });
+
         await get(referenceToTotalRate)
-          .then((snapshot) => {
-            return snapshot.val();
-          })
+          .then((snapshot) => snapshot.val())
           .then((ratingObj) => {
             if (ratingObj) {
               const currentNumberOfReviews = ratingObj.numberOfReviews + 1;
@@ -290,28 +275,31 @@ function FirebaseConnection() {
       if (state.currentUserAccount.userId) {
         const referenceToBook = ref(
           database,
-          `${PATH}/ratings/${bookId}/${state.currentUserAccount.userId}`
+          `${PATH}/ratings/${bookId}/${state.currentUserAccount.userId}`,
         );
         const referenceToTotal = ref(
           database,
-          `${PATH}/ratings/${bookId}/total`
+          `${PATH}/ratings/${bookId}/total`,
         );
-        const prevRating = await get(referenceToBook).then(
-          (snapshot) => snapshot.val().rate
-        );
+
+        const snapshot = await get(referenceToBook);
+        if (!snapshot.exists()) return; // Safety check
+
+        const prevRating = snapshot.val().rate;
+
         await get(referenceToTotal)
-          .then((snapshot) => {
-            return snapshot.val();
-          })
+          .then((snapshot) => snapshot.val())
           .then((ratingObj) => {
             if (ratingObj.numberOfReviews > 1) {
-              const x =
-                (prevRating - ratingObj.rating) /
-                (ratingObj.numberOfReviews - 1);
-              const y = ratingObj.rating - x;
+              const currentTotalScore =
+                ratingObj.rating * ratingObj.numberOfReviews;
+              const newTotalScore = currentTotalScore - prevRating;
+              const newAverage =
+                newTotalScore / (ratingObj.numberOfReviews - 1);
+
               set(referenceToTotal, {
                 numberOfReviews: ratingObj.numberOfReviews - 1,
-                rating: y,
+                rating: newAverage,
               });
             } else {
               set(referenceToTotal, null);
@@ -330,11 +318,22 @@ function FirebaseConnection() {
       const state = listenerApi.getState();
       if (state.currentUserAccount.userId) {
         const { listName, book } = action.payload;
+        const cleanBook = {
+          bookId: book.bookId || "unknown",
+          title: book.title || "Untitled",
+          author: book.author || "Unknown",
+          picture: book.picture || "",
+          genre: book.genre || "General",
+          summary: book.summary || "",
+          pages: book.pages || 0,
+          isbn: book.isbn || "", // Optional
+        };
+
         const referenceToBook = ref(
           database,
-          `${PATH}/users/${state.currentUserAccount.userId}/bookLists/${listName}/listBooks/${book.bookId}`
+          `${PATH}/users/${state.currentUserAccount.userId}/bookLists/${listName}/listBooks/${cleanBook.bookId}`,
         );
-        set(referenceToBook, { book: book });
+        set(referenceToBook, { book: cleanBook });
       }
     },
   });
@@ -347,9 +346,10 @@ function FirebaseConnection() {
         const { listName, book } = action.payload;
         const referenceToBook = ref(
           database,
-          `${PATH}/users/${state.currentUserAccount.userId}/bookLists/${listName}/listBooks/${book.bookId}`
+          `${PATH}/users/${state.currentUserAccount.userId}/bookLists/${listName}/listBooks/${book.bookId}`,
         );
         set(referenceToBook, null);
+
         onValue(
           ref(database, `${PATH}/users/${state.currentUserAccount.userId}`),
           (snapshot) => {
@@ -359,9 +359,7 @@ function FirebaseConnection() {
               persistenceToModel(dataBookLists);
             }
           },
-          {
-            onlyOnce: true,
-          }
+          { onlyOnce: true },
         );
       }
     },
@@ -374,9 +372,10 @@ function FirebaseConnection() {
       if (state.currentUserAccount.userId) {
         const referenceToList = ref(
           database,
-          `${PATH}/users/${state.currentUserAccount.userId}/bookLists/${action.payload}`
+          `${PATH}/users/${state.currentUserAccount.userId}/bookLists/${action.payload}`,
         );
         set(referenceToList, { name: action.payload, listBooks: [] });
+
         onValue(
           ref(database, `${PATH}/users/${state.currentUserAccount.userId}`),
           (snapshot) => {
@@ -386,9 +385,7 @@ function FirebaseConnection() {
               persistenceToModel(dataBookLists);
             }
           },
-          {
-            onlyOnce: true,
-          }
+          { onlyOnce: true },
         );
       }
     },
@@ -401,9 +398,10 @@ function FirebaseConnection() {
       if (state.currentUserAccount.userId) {
         const referenceToList = ref(
           database,
-          `${PATH}/users/${state.currentUserAccount.userId}/bookLists/${action.payload}`
+          `${PATH}/users/${state.currentUserAccount.userId}/bookLists/${action.payload}`,
         );
         set(referenceToList, null);
+
         onValue(
           ref(database, `${PATH}/users/${state.currentUserAccount.userId}`),
           (snapshot) => {
@@ -415,9 +413,7 @@ function FirebaseConnection() {
               dispatch(setAllList([]));
             }
           },
-          {
-            onlyOnce: true,
-          }
+          { onlyOnce: true },
         );
       }
     },
@@ -430,47 +426,39 @@ function FirebaseConnection() {
       if (state.currentUserAccount.userId) {
         const referenceToPrevPath = ref(
           database,
-          `${PATH}/users/${state.currentUserAccount.userId}/bookLists/${action.payload.prevName}`
+          `${PATH}/users/${state.currentUserAccount.userId}/bookLists/${action.payload.prevName}`,
         );
 
         const referenceToNewPath = ref(
           database,
-          `${PATH}/users/${state.currentUserAccount.userId}/bookLists/${action.payload.newName}`
+          `${PATH}/users/${state.currentUserAccount.userId}/bookLists/${action.payload.newName}`,
         );
-        const isPathValid = (await get(referenceToPrevPath)).exists();
-        if (isPathValid) {
-          await get(referenceToPrevPath)
-            .then((snapshot) => snapshot.val())
-            .then((prevData) => {
-              if (prevData.listBooks) {
-                set(referenceToNewPath, {
-                  name: action.payload.newName,
-                  listBooks: prevData.listBooks,
-                });
-              } else {
-                set(referenceToNewPath, {
-                  name: action.payload.newName,
-                  listBooks: null,
-                });
-              }
-              set(referenceToPrevPath, null);
-            });
-          onValue(
-            ref(database, `${PATH}/users/${state.currentUserAccount.userId}`),
-            (snapshot) => {
-              dispatch(setStatus("loading"));
-              const dataBookLists = snapshot.val();
-              if (dataBookLists) {
-                persistenceToModel(dataBookLists);
-              } else {
-                dispatch(setAllList([]));
-              }
-            },
-            {
-              onlyOnce: true,
-            }
-          );
+
+        const snapshot = await get(referenceToPrevPath);
+        if (snapshot.exists()) {
+          const prevData = snapshot.val();
+
+          set(referenceToNewPath, {
+            name: action.payload.newName,
+            listBooks: prevData.listBooks || null,
+          });
+
+          set(referenceToPrevPath, null);
         }
+
+        onValue(
+          ref(database, `${PATH}/users/${state.currentUserAccount.userId}`),
+          (snapshot) => {
+            dispatch(setStatus("loading"));
+            const dataBookLists = snapshot.val();
+            if (dataBookLists) {
+              persistenceToModel(dataBookLists);
+            } else {
+              dispatch(setAllList([]));
+            }
+          },
+          { onlyOnce: true },
+        );
       }
     },
   });
@@ -484,7 +472,7 @@ function FirebaseConnection() {
             username: user.displayName,
             email: user.email,
             userId: user.uid,
-          })
+          }),
         );
         onValue(
           ref(database, `${PATH}/users/${userId}`),
@@ -497,9 +485,7 @@ function FirebaseConnection() {
               dispatch(setStatus("ready"));
             }
           },
-          {
-            onlyOnce: true,
-          }
+          { onlyOnce: true },
         );
       } else {
         dispatch(signOutCurrentUser());
@@ -507,37 +493,38 @@ function FirebaseConnection() {
     });
   }, []);
 
+  // Inactivity Timer
   useEffect(() => {
     const signOutOnInactivity = async () => {
-      const inactivityTimeout = setTimeout(async () => {
-        dispatch(signOutCurrentUser());
-        alert(
-          "You have been signed out due to an inactivity timeout or you left the page"
-        );
-      }, 300000); 
+      let inactivityTimeout;
 
       const resetInactivityTimer = () => {
         clearTimeout(inactivityTimeout);
-        inactivityTimer();
+        inactivityTimeout = setTimeout(() => {
+          dispatch(signOutCurrentUser());
+          alert("You have been signed out due to inactivity.");
+        }, 300000); // 5 minutes
       };
 
-      const inactivityTimer = () => {
-        document.addEventListener("mousemove", resetInactivityTimer);
-        document.addEventListener("keydown", resetInactivityTimer);
-        document.addEventListener("scroll", resetInactivityTimer);
-      };
+      document.addEventListener("mousemove", resetInactivityTimer);
+      document.addEventListener("keydown", resetInactivityTimer);
+      document.addEventListener("scroll", resetInactivityTimer);
 
-      inactivityTimer();
+      // Start initial timer
+      resetInactivityTimer();
 
       return () => {
         document.removeEventListener("mousemove", resetInactivityTimer);
         document.removeEventListener("keydown", resetInactivityTimer);
         document.removeEventListener("scroll", resetInactivityTimer);
+        clearTimeout(inactivityTimeout);
       };
     };
 
     signOutOnInactivity();
   }, []);
+
+  return null;
 }
 
 export default FirebaseConnection;
