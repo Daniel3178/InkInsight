@@ -28,7 +28,7 @@ yarn-error.log*
 dist
 package-lock.json
 **/*solved*
-**/*Config.js*
+**/*firebaseConfig.js*
 !telemetry.config.json
 /public/*.js
 /public/*.html
