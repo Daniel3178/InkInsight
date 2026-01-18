@@ -1,5 +1,5 @@
 import { MdClose, MdAdd, MdCheck } from "react-icons/md";
-
+import { createListCreteria } from "../../utilities/regex";
 const PopupView = (props) => {
   const createListACB = () => {
     let newObj = createListCreteria({
