@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+@theme {
+    /* --- Semantic Color Palette --- */
+    /* Primary Brand Colors (based on Indigo) */
+    --color-brand-primary: #4f46e5;
+    /* indigo-600 (Buttons, Highlights) */
+    --color-brand-hover: #6366f1;
+    /* indigo-500 (Hover states) */
+    --color-brand-light: #818cf8;
+    /* indigo-400 (Accents) */
+
+    /* Background/Layout Colors (based on Slate) */
+    --color-canvas: #0f172a;
+    /* slate-900 (Main Page Background) */
+    --color-surface: #1e293b;
+    /* slate-800 (Cards, Search Bar, Modals) */
+    --color-surface-highlight: #334155;
+    /* slate-700 (Borders, Dividers) */
+
+    /* Text Colors */
+    --color-text-main: #f1f5f9;
+    /* slate-100 (Headings) */
+    --color-text-secondary: #cbd5e1;
+    /* slate-300 (Body text) */
+    --color-text-muted: #94a3b8;
+    /* slate-400 (Subtitles, Meta info) */
+
+    /* Status & Accents */
+    --color-accent-glow: #22d3ee;
+    /* cyan-400 (Gradients) */
+    --color-status-rating: #eab308;
+    /* yellow-500 (Stars) */
+}
