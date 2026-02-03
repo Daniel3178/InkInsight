@@ -145,6 +145,10 @@ const BookDetailsPresenter = () => {
     navigate("/", { state: "/bookDetails" });
   };
 
+  const handleGoToSignIn = () => {
+    navigate("/signIn");
+  };
+
   return (
     <div>
       {currentBook?.bookId && (
@@ -167,6 +171,7 @@ const BookDetailsPresenter = () => {
           username={username}
           handleDeletUserRating={handleDeletUserRating}
           goToHomePage={handleGoToHomePage}
+          goToSignIn={handleGoToSignIn}
         />
       )}
 

@@ -299,7 +299,10 @@ const BookDetailsView = (props) => {
                   <div className="text-center p-6 bg-canvas/30 rounded-xl border border-dashed border-surface-highlight">
                     <p className="text-text-muted">
                       Please{" "}
-                      <button className="text-brand-light underline hover:text-brand-hover font-medium">
+                      <button
+                        onClick={props.goToSignIn}
+                        className="text-brand-light underline hover:text-brand-hover font-medium"
+                      >
                         Log In
                       </button>{" "}
                       to rate and review this book.
